@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       { tipo: "video", src: "media/videos/oso18.mp4" },
       { tipo: "video", src: "media/videos/oso19.mp4" }
 
+
     ]
   };
 
