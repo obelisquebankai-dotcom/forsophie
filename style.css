@@ -74,8 +74,8 @@ body {
 
 .popup {
   position: absolute;
-  width: 340px;
-  height: 260px; /* 🔒 ALTURA FIJA */
+  width: 400px;
+  height: 350px; /* 🔒 ALTURA FIJA */
   background: rgba(255,255,255,.95);
   border-radius: 22px;
   padding: 12px;
