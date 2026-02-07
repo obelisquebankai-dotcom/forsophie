@@ -67,26 +67,18 @@ document.querySelectorAll(".selector-btn").forEach(b => {
 
 
   /* ===== POPUPS ===== */
-  btn.addEventListener("click", () => {
-
+btn.addEventListener("click", () => {
     if (!categoriaActual || !libreria[categoriaActual]) return;
 
-if (primeraVez) {
-
-  // 🎬 fondo visible + sonido
-  bgWrap.style.opacity = "1";
-  bgVideo.muted = false;
-  bgVideo.volume = 1;
-  bgVideo.play();
-
-  // 🔊 audio fondo
-  bgAudio.muted = false;
-  bgAudio.volume = 1;
-  bgAudio.play();
-
-  primeraVez = false;
-}
-
+    if (primeraVez) {
+        bgWrap.style.opacity = "1";
+        bgVideo.muted = false;
+        bgAudio.muted = false;
+        // En móviles, play() debe llamarse inmediatamente en el click
+        bgVideo.play().catch(e => console.log("Error video:", e));
+        bgAudio.play().catch(e => console.log("Error audio:", e));
+        primeraVez = false;
+    }
 
     const lista = libreria[categoriaActual];
     const elegido = lista[Math.floor(Math.random() * lista.length)];
@@ -95,17 +87,16 @@ if (primeraVez) {
     popup.className = "popup";
     popup.style.zIndex = ++zIndex;
 
-    let x, y, r;
-    do {
-      r = btn.getBoundingClientRect();
-      x = Math.random() * (innerWidth - 360);
-      y = Math.random() * (innerHeight - 420);
-    } while (
-      x < r.right &&
-      x + 340 > r.left &&
-      y < r.bottom &&
-      y + 380 > r.top
-    );
+    // --- CÁLCULO DE POSICIÓN RESPONSIVO ---
+    const popupWidth = window.innerWidth > 500 ? 350 : window.innerWidth * 0.8;
+    const popupHeight = window.innerWidth > 500 ? 500 : window.innerHeight * 0.6;
+
+    let x = Math.random() * (window.innerWidth - popupWidth);
+    let y = Math.random() * (window.innerHeight - popupHeight);
+
+    // Evitar que aparezca fuera de los bordes
+    x = Math.max(10, Math.min(x, window.innerWidth - popupWidth - 10));
+    y = Math.max(10, Math.min(y, window.innerHeight - popupHeight - 10));
 
     popup.style.left = x + "px";
     popup.style.top = y + "px";
@@ -115,23 +106,21 @@ if (primeraVez) {
     const video = document.createElement("video");
     video.autoplay = true;
     video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
+    video.muted = true; // Los popups suelen requerir estar muteados para autoplay infinito
+    video.playsInline = true; // OBLIGATORIO PARA IOS
+    video.setAttribute("webkit-playsinline", "true"); // Extra para versiones viejas de Safari
 
-    const source = document.createElement("source");
-    source.src = elegido.src;
-    source.type = "video/mp4";
-
-    video.appendChild(source);
+    video.src = elegido.src; 
+    
     popup.appendChild(video);
 
     popup.querySelector(".close").onclick = e => {
-      e.stopPropagation();
-      popup.remove();
+        e.stopPropagation();
+        popup.remove();
     };
 
     popupZone.appendChild(popup);
-  });
+});
 
 });
 
