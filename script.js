@@ -55,7 +55,7 @@ document.querySelectorAll(".selector-btn").forEach(b => {
     bgVideo.muted = true;
     bgVideo.play().catch(()=>{});
 
-    bgAudio.src = "media/audio/audio.mp3";
+    bgAudio.src = "media/audio/fondo.mp3";
     bgAudio.muted = true;
     bgAudio.play().catch(()=>{});
 
@@ -88,8 +88,20 @@ btn.addEventListener("click", () => {
     popup.style.zIndex = ++zIndex;
 
     // --- CÁLCULO DE POSICIÓN RESPONSIVO ---
-    const popupWidth = window.innerWidth > 500 ? 350 : window.innerWidth * 0.8;
-    const popupHeight = window.innerWidth > 500 ? 500 : window.innerHeight * 0.6;
+const isMobile = window.innerWidth < 600;
+
+const popupWidth = isMobile
+  ? window.innerWidth * 0.85
+  : 380;
+
+const popupHeight = isMobile
+  ? window.innerHeight * 0.65
+  : 560;
+
+/* Aplicar tamaño REAL al popup */
+popup.style.width = popupWidth + "px";
+popup.style.height = popupHeight + "px";
+
 
     let x = Math.random() * (window.innerWidth - popupWidth);
     let y = Math.random() * (window.innerHeight - popupHeight);

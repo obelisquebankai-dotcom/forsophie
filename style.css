@@ -74,8 +74,11 @@ body {
 
 .popup {
   position: absolute;
-  width: 400px;
-  height: 600px; /* 🔒 ALTURA FIJA */
+
+  /* 🧠 Tamaño adaptable */
+  width: min(90vw, 380px);
+  height: min(70vh, 560px);
+
   background: rgba(255,255,255,.95);
   border-radius: 22px;
   padding: 12px;
