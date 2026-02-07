@@ -91,11 +91,11 @@ btn.addEventListener("click", () => {
 const isMobile = window.innerWidth < 600;
 
 const popupWidth = isMobile
-  ? window.innerWidth * 0.34
+  ? window.innerWidth * 0.51
   : 380;
 
 const popupHeight = isMobile
-  ? window.innerHeight * 0.26
+  ? window.innerHeight * 0.39
   : 560;
 
 /* Aplicar tamaño REAL al popup */
