@@ -45,13 +45,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const bgAudio = document.getElementById("bgAudio");
 
   /* ===== SELECCIÓN ===== */
-  document.querySelectorAll(".selector-btn").forEach(b => {
-    b.addEventListener("click", () => {
-      categoriaActual = b.dataset.cat;
-      selector.style.display = "none";
-      main.style.display = "flex";
-    });
+document.querySelectorAll(".selector-btn").forEach(b => {
+  b.addEventListener("click", () => {
+
+    categoriaActual = b.dataset.cat;
+
+    /* 🔓 DESBLOQUEO GLOBAL DE MEDIA (MÓVIL) */
+    bgVideo.src = "media/fondo.mp4"; // LOCAL
+    bgVideo.muted = true;
+    bgVideo.play().catch(()=>{});
+
+    bgAudio.src = "media/audio.mp3";
+    bgAudio.muted = true;
+    bgAudio.play().catch(()=>{});
+
+    /* UI */
+    selector.style.display = "none";
+    main.style.display = "flex";
   });
+});
 
   /* ===== POPUPS ===== */
   btn.addEventListener("click", () => {
@@ -60,23 +72,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 if (primeraVez) {
 
-  bgVideo.src = videoFondoLocal;
-  bgVideo.muted = true;
-  bgVideo.loop = true;
-  bgVideo.playsInline = true;
-  bgVideo.preload = "auto";
+  // 🎬 fondo visible + sonido
+  bgWrap.style.opacity = "1";
+  bgVideo.muted = false;
+  bgVideo.volume = 1;
+  bgVideo.play();
 
-  bgVideo.oncanplay = () => {
-    bgVideo.play().catch(()=>{});
-    bgWrap.style.opacity = "1";
-  };
-
-  bgAudio.src = audioFondo;
-  bgAudio.loop = true;
-  bgAudio.play().catch(()=>{});
+  // 🔊 audio fondo
+  bgAudio.muted = false;
+  bgAudio.volume = 1;
+  bgAudio.play();
 
   primeraVez = false;
 }
+
 
 
     const lista = libreria[categoriaActual];
@@ -104,24 +113,20 @@ if (primeraVez) {
     popup.innerHTML = `<span class="close">&times;</span>`;
 
     const video = document.createElement("video");
-    video.autoplay = true;
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
+video.src = elegido.src;
+video.autoplay = true;
+video.loop = true;
+video.muted = false;
+video.playsInline = true;
+video.preload = "auto";
+video.volume = 1;
 
-    const source = document.createElement("source");
-    source.src = elegido.src;
-    source.type = "video/mp4";
+video.play().catch(err => {
+  console.warn("Mobile bloqueó este popup:", err);
+});
 
-    video.appendChild(source);
-    popup.appendChild(video);
+popup.appendChild(video);
 
-    popup.querySelector(".close").onclick = e => {
-      e.stopPropagation();
-      popup.remove();
-    };
-
-    popupZone.appendChild(popup);
   });
 
 });
