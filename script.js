@@ -15,25 +15,26 @@ document.addEventListener("DOMContentLoaded", () => {
       { tipo: "video", src: "media/videos/oso6.mp4" },
       { tipo: "video", src: "media/videos/oso7.mp4" },
       { tipo: "video", src: "media/videos/oso8.mp4" },
-      { tipo: "video", src: "media/videos/oso9.mp4" },      
-      { tipo: "video", src: "media/videos/oso10.mp4" },
-      { tipo: "video", src: "media/videos/oso11.mp4" },
-      { tipo: "video", src: "media/videos/oso12.mp4" },
-      { tipo: "video", src: "media/videos/oso13.mp4" },
-      { tipo: "video", src: "media/videos/oso15.mp4" },
+      { tipo: "video", src: "media/videos/oso9.mp4" },
+      { tipo: "video", src: "media/videos/oso10.mp4"},
+      { tipo: "video", src: "media/videos/oso11.mp4"},      
+      { tipo: "video", src: "media/videos/oso12.mp4"},
+      { tipo: "video", src: "media/videos/oso13.mp4"},      
+      { tipo: "video", src: "media/videos/oso14.mp4"},
+      { tipo: "video", src: "media/videos/oso15.mp4"},
       { tipo: "video", src: "media/videos/oso16.mp4" },
-      { tipo: "video", src: "media/videos/oso17.mp4" },
-      { tipo: "video", src: "media/videos/oso18.mp4" },
-      { tipo: "video", src: "media/videos/oso19.mp4" }
-
-
-    ]
-  };
+      { tipo: "video", src: "media/videos/oso17.mp4"},
+      { tipo: "video", src: "media/videos/oso18.mp4"},      
+      { tipo: "video", src: "media/videos/oso19.mp4"},
+      { tipo: "video", src: "media/videos/oso20.mp4"},      
+      { tipo: "video", src: "media/videos/oso21.mp4"}
+ ] };
 
   /* ===== ESTADO ===== */
-  let categoriaActual = null;
-  let primeraVez = true;
-  let zIndex = 10;
+let categoriaActual = null;
+let primeraVez = true;
+let zIndex = 10;
+let popupsActivos = []; 
 
   /* ===== ELEMENTOS ===== */
   const selector = document.getElementById("selector");
@@ -68,6 +69,7 @@ document.querySelectorAll(".selector-btn").forEach(b => {
 
   /* ===== POPUPS ===== */
 btn.addEventListener("click", () => {
+
     if (!categoriaActual || !libreria[categoriaActual]) return;
 
     if (primeraVez) {
@@ -77,9 +79,13 @@ btn.addEventListener("click", () => {
         // En móviles, play() debe llamarse inmediatamente en el click
         bgVideo.play().catch(e => console.log("Error video:", e));
         bgAudio.play().catch(e => console.log("Error audio:", e));
+        btn.classList.add("dim"); 
         primeraVez = false;
     }
-
+  if (popupsActivos.length >= 4) {
+        const viejo = popupsActivos.shift(); // Saca el primero de la lista (el más antiguo)
+        if (viejo) viejo.remove(); // Lo elimina del DOM
+    }
     const lista = libreria[categoriaActual];
     const elegido = lista[Math.floor(Math.random() * lista.length)];
 
@@ -123,17 +129,31 @@ popup.style.height = popupHeight + "px";
     video.setAttribute("webkit-playsinline", "true"); // Extra para versiones viejas de Safari
 
     video.src = elegido.src; 
+video.oncanplay = () => {
+  // 🔊 activar sonido tras interacción del usuario
+  video.muted = false;
+  video.volume = 1.0;
+
+  video.play().catch(err => {
+    console.warn("No se pudo reproducir con sonido:", err);
+  });
+};
     
     popup.appendChild(video);
 
     popup.querySelector(".close").onclick = e => {
         e.stopPropagation();
+popupsActivos = popupsActivos.filter(p => p !== popup);
         popup.remove();
     };
 
     popupZone.appendChild(popup);
+popupsActivos.push(popup);
 });
 
-});
 
+
+
+
+});
 
